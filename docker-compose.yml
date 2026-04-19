@@ -14,7 +14,7 @@ services:
       - DB_PORT=5432
       - DB_USER=postgres
       - DB_PASSWORD=secretpassword
-      - DB_NAME=my_database
+      - DB_NAME=postgres
       - JWT_SECRET=change_this_to_something_secure
       - JWT_EXPIRES_IN=1d
     depends_on:
