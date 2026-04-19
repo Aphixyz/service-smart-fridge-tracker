@@ -1,12 +1,20 @@
-import { Router } from 'express';
+import { Router, type Request, type Response } from 'express';
 import { authService } from './auth.service.ts';
 import { catchAsync } from '../../common/utils/catchAsync.ts';
 import { apiResponse } from '../../common/response/ApiResponse.ts';
+import { clearAuthCookie, setAuthCookie } from '../../common/utils/authCookie.ts';
 
 export const authRouter = Router();
 
-authRouter.post('/auth/login', catchAsync(async (req, res) => {
-  const { email, password } = req.body;
-  const result = await authService.login(email, password);
-  res.json(apiResponse.ok(result, 'Login successful'));
+authRouter.post('/auth/login', catchAsync(async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+  const { token, user } = await authService.login(username, password);
+
+  setAuthCookie(res, token);
+  res.json(apiResponse.ok({ user }, 'Login successful'));
+}));
+
+authRouter.post('/auth/logout', catchAsync(async (_req: Request, res: Response) => {
+  clearAuthCookie(res);
+  res.json(apiResponse.ok(null, 'Logout successful'));
 }));

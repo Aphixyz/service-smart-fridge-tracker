@@ -1,7 +1,5 @@
 import { fridgeRepository } from './fridge.repository.ts';
 import { appError } from '../../common/error/AppError.ts';
-import { throwIf, catchNotFound } from '../../common/utils/checker.ts';
-
 
 export interface Fridge {
   id: number;
@@ -11,8 +9,13 @@ export interface Fridge {
 }
 
 export const fridgeService = {
-  findFridgeDetail: async (authId: number) => {
-    return await fridgeRepository.FindFridgeDetail(authId)
-      .then(catchNotFound(appError.notFound(`Fridge not found`)));
+  findFridgeDetailByHomeId: async (homeId: number) => {
+    const fridgeDetails = await fridgeRepository.findFridgeDetailByHomeId(homeId);
+
+    if (fridgeDetails.length === 0) {
+      throw appError.notFound('Fridge not found');
+    }
+
+    return fridgeDetails;
   },
-}
+};
