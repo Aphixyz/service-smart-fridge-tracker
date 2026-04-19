@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # ── Backend App ──
+  app:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - BASE_URL=http://localhost:3001
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=secretpassword
+      - DB_NAME=my_database
+      - JWT_SECRET=change_this_to_something_secure
+      - JWT_EXPIRES_IN=1d
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - api-network
+
+  # ── PostgreSQL Database ──
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secretpassword
+      - POSTGRES_DB=my_database
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - api-network
+
+  # ── Database Management (Optional) ──
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - api-network
+
+networks:
+  api-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
