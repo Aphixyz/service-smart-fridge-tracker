@@ -17,7 +17,7 @@ export const RegisterSchema = {
             .min(6, 'Password must be at least 6 characters')
             // .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
             // .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-            // .regex(/[0-9]/, 'Password must contain at least one number')
+            .regex(/[0-9]/, 'Password must contain at least one number')
             .max(100, 'Password must be at most 100 characters'),
         confirmpassword: z
             .string()
@@ -26,11 +26,18 @@ export const RegisterSchema = {
     }),
 }
 
-    export const validate = (schema) => (data) => {
-        const result = schema.safeParse(data);
-        if (!result.success) {
-            const message = result.error.errors.map(err => `${err.path}: ${err.message}`).join(', ');
-            throw appError.badRequest(message);
-        }
+    export const validate = (schema: z.ZodSchema) => (data: any) => {
+    const result = schema.safeParse(data);
+    
+    if (!result.success) {
+        // ใช้ result.error.issues หรือ result.error.flatten() จะปลอดภัยกว่า
+        const message = result.error.issues
+            .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
+            .join(", ");
+            
+        throw appError.badRequest(message);
+    }
+    
+    return result.data;
         return result.data
     }

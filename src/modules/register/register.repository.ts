@@ -16,7 +16,7 @@ export const registerRepository = {
     INSERT INTO home_user (
       name,
       username,
-      password,
+      password
     )
     VALUES ($1, $2, $3)
     RETURNING *
