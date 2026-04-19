@@ -1,27 +1,36 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { userRepository } from '../user/user.repository.ts';
 import { appError } from '../../common/error/AppError.ts';
+import { authRepository } from './auth.repository.ts';
+import type { AuthenticatedUser, AuthTokenPayload, LoginResult } from './auth.type.ts';
+
+const buildUserPayload = (user: AuthenticatedUser): AuthTokenPayload => ({
+  id: user.id,
+  username: user.username,
+});
+
+const signAccessToken = (payload: AuthTokenPayload): string =>
+  jwt.sign(payload, process.env.JWT_SECRET || 'secret', {
+    expiresIn: (process.env.JWT_EXPIRES_IN as jwt.SignOptions['expiresIn']) || '1d',
+  });
 
 export const authService = {
-  login: async (email, password) => {
-    // 1. หา user
-    const user = await userRepository.findOneByEmail(email);
-    if (!user) throw appError.unauthorized('Invalid email or password');
+  login: async (username: string, password: string): Promise<LoginResult> => {
+    const user = await authRepository.findOneByUsername(username);
+    if (!user) throw appError.unauthorized('Invalid username or password');
 
-    // 2. เช็ค password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw appError.unauthorized('Invalid email or password');
+    if (!isMatch) throw appError.unauthorized('Invalid username or password');
 
-    // 3. ออก Token
-    const payload = { id: user.id, email: user.email, role: user.role };
-    const token = jwt.sign(payload, process.env.JWT_SECRET || 'AA', {
-      expiresIn: (process.env.JWT_EXPIRES_IN as any) || '1d'
-    });
+    const authenticatedUser: AuthenticatedUser = {
+      id: user.id,
+      name: user.name,
+      username: user.username,
+    };
 
     return {
-      token,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role }
+      token: signAccessToken(buildUserPayload(authenticatedUser)),
+      user: authenticatedUser,
     };
   }
 };

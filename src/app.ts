@@ -8,10 +8,17 @@ import { globalRateLimiter } from './common/middleware/rateLimiter.ts';
 import { setupSwagger } from './config/swagger.config.ts';
 
 const app = express();
+const allowedOrigins = (process.env.CORS_ORIGIN || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 // ── Security & Utility Middleware ──
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: allowedOrigins.length > 0 ? allowedOrigins : true,
+  credentials: true,
+}));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(globalRateLimiter);
