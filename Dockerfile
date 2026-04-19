@@ -20,4 +20,4 @@ COPY --from=builder /app/src ./src
 
 EXPOSE 3001
 
-CMD ["node", "src/index.js"]
+CMD ["node", "src/index.ts"]
