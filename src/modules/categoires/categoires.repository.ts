@@ -8,8 +8,9 @@ import type {
 export const categoiresRepository = {
   findAll: async (): Promise<Categoires[]> => {
     const sql = `
-      SELECT *
-      FROM categories
+      SELECT cat.id, cat.name, cat.icon
+      FROM categories cat LEFT JOIN home_user hu ON cat.home_id = hu."id"
+      WHERE hu."id" = $1 OR hu."id" IS NULL
       ORDER BY id ASC;
     `;
 
