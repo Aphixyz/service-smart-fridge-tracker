@@ -19,7 +19,7 @@ export const categoiresRepository = {
 
   findById: async (id: number): Promise<Categoires | null> => {
     const sql = `
-      SELECT *
+      SELECT  id, name, icon
       FROM categories
       WHERE id = $1
       LIMIT 1;
