@@ -37,17 +37,23 @@ export const categoiresUtils = {
       throw appError.badRequest("icon: Icon is required");
     }
     return {
-      home_id: req.user?.home_id ?? null,
+      home_id: req.user?.id ?? null,
       name: body.name,
       icon: body.icon,
     };
   },
 
   getUpdateCategoryInput(req: AuthRequest): UpdateCategoiresInput {
-    return validate(CategoiresSchema.update)({
+    const body = validate(CategoiresSchema.update)({
       name: req.body.name,
       icon: resolveIconInput(req),
     });
+
+    return {
+      home_id: req.user?.id ?? null,
+      name: body.name,
+      icon: body.icon,
+    };
   },
 
   async runWithUploadedIconCleanup<T>(

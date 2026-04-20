@@ -27,15 +27,16 @@ export const categoiresService = {
   async update(id: number, data: UpdateCategoiresInput): Promise<Categoires> {
     const item = await this.getCategoryById(id);
     // ถ้าไม่มี icon ใหม่ ให้ใช้ค่าเดิมไปก่อน
-    const nextIcon = item.icon;
+    const nextIcon = data.icon ?? item.icon;
     const updated = await categoiresRepository.update(id, {
-      name: item.name,
+      name: data.name,
       home_id: item.home_id,
-      icon: nextIcon, 
+      icon: nextIcon,
     });
     if (!updated) throw appError.internal("Failed to update categoires");
     // ลบไฟล์เก่าหลังจากบันทึก path ใหม่ลงฐานข้อมูลสำเร็จแล้วเท่านั้น
     if (nextIcon !== item.icon) await removeProjectUpload(item.icon);
+
     return updated;
   },
 
