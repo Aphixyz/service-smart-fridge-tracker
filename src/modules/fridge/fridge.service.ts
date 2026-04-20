@@ -4,8 +4,7 @@ import { Product } from './fridge.type.ts';
 
 const statusMap: Record<string, string> = {
   "Active": "ควรบริโภค",
-  "Expired": "หมดอายุ",
-  "Expiring": "ใกล้หมดอายุ",
+  "Expired": "ไม่ควรบริโภค",
   "Consumed": "หมดแล้ว"
 };
 
