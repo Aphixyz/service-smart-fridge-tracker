@@ -12,3 +12,9 @@ fridgeRouter.get('/fridges', authMiddleware, catchAsync(async (req: AuthRequest,
     const fridge = await fridgeService.findFridgeDetailByHomeId(homeId);
     res.json(apiResponse.ok(fridge));
 }));
+
+fridgeRouter.get('/fridges/:fridgeId/products', authMiddleware, catchAsync(async (req: AuthRequest, res: Response) => {
+    const fridgeId = parseInt(req.params.fridgeId as string);
+    const products = await fridgeService.findProductsByFridgeId(fridgeId);
+    res.json(apiResponse.ok(products));
+}));

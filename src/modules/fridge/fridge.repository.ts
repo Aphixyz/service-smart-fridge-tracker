@@ -20,4 +20,18 @@ export const fridgeRepository = {
     const result = await db.query(sql, [homeId]);
     return result.rows;
   },
+
+   FindProductsByFridgeId: async (fridgeId: number) => {
+            const sql = `SELECT 
+                              pd.id, pd."name" AS products_name,
+                              pd.category_id ,
+                              cat.name AS categories_name, 
+                              pd.quantity ,pd.unit ,pd.expiry_date, pd.status 
+                        FROM products pd 
+                              JOIN home_fridge hf ON pd.fridge_id = hf.id 
+                              JOIN categories cat ON pd.category_id = cat.id 
+                        WHERE hf.id = $1`;
+            const res = await db.query(sql, [fridgeId]);
+            return res.rows;
+      }
 };
