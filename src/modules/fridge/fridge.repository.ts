@@ -26,7 +26,7 @@ export const fridgeRepository = {
                               pd.id, pd."name" AS products_name,
                               pd.category_id ,
                               cat.name AS categories_name, 
-                              pd.quantity ,pd.unit ,pd.expiry_date, pd.status 
+                              pd.quantity ,pd.unit ,pd.expiry_date, pd.status, cat.icon 
                         FROM products pd 
                               JOIN home_fridge hf ON pd.fridge_id = hf.id 
                               JOIN categories cat ON pd.category_id = cat.id 

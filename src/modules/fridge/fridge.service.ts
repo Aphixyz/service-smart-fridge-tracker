@@ -3,7 +3,7 @@ import { appError } from '../../common/error/AppError.ts';
 import { Product } from './fridge.type.ts';
 
 const statusMap: Record<string, string> = {
-  "Active": "ปกติ",
+  "Active": "ควรบริโภค",
   "Expired": "หมดอายุ",
   "Expiring": "ใกล้หมดอายุ",
   "Consumed": "หมดแล้ว"
