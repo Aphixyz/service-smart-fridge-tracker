@@ -6,14 +6,13 @@ import type {
 } from "./categoires.type.ts";
 
 export const categoiresRepository = {
-  findAll: async (): Promise<Categoires[]> => {
+  findAll: async (id: number): Promise<Categoires[]> => {
     const sql = `
       SELECT cat.id, cat.name, cat.icon
       FROM categories cat LEFT JOIN home_user hu ON cat.home_id = hu."id"
       WHERE hu."id" = $1 OR hu."id" IS NULL
       ORDER BY id ASC;
     `;
-
     const { rows } = await db.query<Categoires>(sql);
     return rows;
   },

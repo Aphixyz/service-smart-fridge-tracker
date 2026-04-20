@@ -8,8 +8,8 @@ import type {
 } from "./categoires.type.ts";
 
 export const categoiresService = {
-  async getAllCategories(): Promise<Categoires[]> {
-    return categoiresRepository.findAll();
+  async getAllCategories(home_id: number): Promise<Categoires[]> {
+    return categoiresRepository.findAll(home_id);
   },
 
   async getCategoryById(id: number): Promise<Categoires> {
