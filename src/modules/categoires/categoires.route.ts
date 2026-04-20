@@ -22,8 +22,9 @@ categoiresRouter.get(
     "/categoires/:id",
     authMiddleware,
     catchAsync(async (req: AuthRequest, res: Response) => {
+        const authId = req.user!.id;
         const id = categoiresUtils.getCategoryId(req.params.id);
-        const data = await categoiresService.getCategoryById(id);
+        const data = await categoiresService.getCategoryById(id, authId);
         res.json(apiResponse.ok(data));
     }),
 );
@@ -46,10 +47,11 @@ categoiresRouter.put(
     authMiddleware,
     categoiresUtils.uploadCategoryIcon,
     catchAsync(async (req: AuthRequest, res: Response) => {
+        const authId = req.user!.id;
         const id = categoiresUtils.getCategoryId(req.params.id);
         const updated = await categoiresUtils.runWithUploadedIconCleanup(req, async () => {
             const data = categoiresUtils.getUpdateCategoryInput(req);
-            return categoiresService.update(id, data);
+            return categoiresService.update(id, authId, data);
         });
         res.json(apiResponse.ok(updated));
     }),
@@ -59,8 +61,9 @@ categoiresRouter.delete(
     "/categoires/:id",
     authMiddleware,
     catchAsync(async (req: AuthRequest, res: Response) => {
+        const authId = req.user!.id;
         const id = categoiresUtils.getCategoryId(req.params.id);
-        const removed = await categoiresService.remove(id);
+        const removed = await categoiresService.remove(id, authId);
         res.json(apiResponse.ok(removed));
     }),
 );

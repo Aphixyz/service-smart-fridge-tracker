@@ -12,8 +12,8 @@ export const categoiresService = {
     return categoiresRepository.findAll(home_id);
   },
 
-  async getCategoryById(id: number): Promise<Categoires> {
-    const item = await categoiresRepository.findById(id);
+  async getCategoryById(id: number, homeId: number): Promise<Categoires> {
+    const item = await categoiresRepository.findById(id, homeId);
     if (!item) throw appError.notFound("Categoires not found");
     return item;
   },
@@ -24,8 +24,12 @@ export const categoiresService = {
     return created;
   },
 
-  async update(id: number, data: UpdateCategoiresInput): Promise<Categoires> {
-    const item = await this.getCategoryById(id);
+  async update(
+    id: number,
+    homeId: number,
+    data: UpdateCategoiresInput,
+  ): Promise<Categoires> {
+    const item = await this.getCategoryById(id, homeId);
     // ถ้าไม่มี icon ใหม่ ให้ใช้ค่าเดิมไปก่อน
     const nextIcon = data.icon ?? item.icon;
     const updated = await categoiresRepository.update(id, {
@@ -40,8 +44,8 @@ export const categoiresService = {
     return updated;
   },
 
-  async remove(id: number): Promise<Categoires> {
-    await this.getCategoryById(id);
+  async remove(id: number, homeId: number): Promise<Categoires> {
+    await this.getCategoryById(id, homeId);
     const removed = await categoiresRepository.remove(id);
     if (!removed) {
       throw appError.internal("Failed to remove categoires");
