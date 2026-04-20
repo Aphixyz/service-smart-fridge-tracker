@@ -2,11 +2,11 @@ import type { AuthRequest } from "../auth/auth.type.ts";
 import { appError } from "../../common/error/AppError.ts";
 import { uploadMiddlewareFactory } from "../../common/middleware/upload.middleware.ts";
 import { uploadRequestUtils } from "../../common/utils/uploadRequest.ts";
-import { CategoiresSchema, validate } from "./categoires.validator.ts";
+import { categoriesSchema, validate } from "./categories.validator.ts";
 import type {
-  CreateCategoiresInput,
-  UpdateCategoiresInput,
-} from "./categoires.type.ts";
+  CreatecategoriesInput,
+  UpdatecategoriesInput,
+} from "./categories.type.ts";
 
 const CATEGORY_ICON_FOLDER = "categories";
 const CATEGORY_ICON_FIELD = "icon";
@@ -15,20 +15,20 @@ const resolveIconInput = (req: AuthRequest): string | undefined =>
   uploadRequestUtils.getUploadedFilePublicPath(req, CATEGORY_ICON_FOLDER) ??
   req.body.icon;
 
-export const categoiresUtils = {
+export const categoriesUtils = {
   uploadCategoryIcon: uploadMiddlewareFactory.createSingleImageUpload(
     CATEGORY_ICON_FIELD,
     CATEGORY_ICON_FOLDER,
   ),
 
   getCategoryId(id: string | string[]): number {
-    return validate(CategoiresSchema.params)({
+    return validate(categoriesSchema.params)({
       id: Array.isArray(id) ? id[0] : id,
     }).id;
   },
 
-  getCreateCategoryInput(req: AuthRequest): CreateCategoiresInput {
-    const body = validate(CategoiresSchema.create)({
+  getCreateCategoryInput(req: AuthRequest): CreatecategoriesInput {
+    const body = validate(categoriesSchema.create)({
       name: req.body.name,
       icon: resolveIconInput(req),
     });
@@ -43,8 +43,8 @@ export const categoiresUtils = {
     };
   },
 
-  getUpdateCategoryInput(req: AuthRequest): UpdateCategoiresInput {
-    const body = validate(CategoiresSchema.update)({
+  getUpdateCategoryInput(req: AuthRequest): UpdatecategoriesInput {
+    const body = validate(categoriesSchema.update)({
       name: req.body.name,
       icon: resolveIconInput(req),
     });
