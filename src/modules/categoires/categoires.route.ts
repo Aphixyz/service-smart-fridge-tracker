@@ -4,15 +4,14 @@ import { authMiddleware } from "../../common/middleware/auth.middleware.ts";
 import { catchAsync } from "../../common/utils/catchAsync.ts";
 import { categoiresService } from "./categoires.service.ts";
 import type { AuthRequest } from "../auth/auth.type.ts";
-import { CategoiresSchema, validate } from "./categoires.validator.ts";
-import { upload } from "../../common/middleware/upload.ts"; 
+import { categoiresUtils } from "./categoires.utils.ts";
 
 export const categoiresRouter = Router();
 
 categoiresRouter.get(
     "/categoires",
     authMiddleware,
-    catchAsync(async (_req: AuthRequest, res: Response) => {    
+    catchAsync(async (_req: AuthRequest, res: Response) => {
         const data = await categoiresService.getAllCategories();
         res.json(apiResponse.ok(data));
     }),
@@ -22,8 +21,8 @@ categoiresRouter.get(
     "/categoires/:id",
     authMiddleware,
     catchAsync(async (req: AuthRequest, res: Response) => {
-        const id = req.params.id as string;
-        const data = await categoiresService.getCategoryById(id as any);
+        const id = categoiresUtils.getCategoryId(req.params.id);
+        const data = await categoiresService.getCategoryById(id);
         res.json(apiResponse.ok(data));
     }),
 );
@@ -31,9 +30,12 @@ categoiresRouter.get(
 categoiresRouter.post(
     "/categoires",
     authMiddleware,
+    categoiresUtils.uploadCategoryIcon,
     catchAsync(async (req: AuthRequest, res: Response) => {
-        const data = validate(CategoiresSchema.create)(req.body);
-        const created = await categoiresService.create(data as any );
+        const created = await categoiresUtils.runWithUploadedIconCleanup(req, async () => {
+            const data = categoiresUtils.getCreateCategoryInput(req);
+            return categoiresService.create(data);
+        });
         res.status(201).json(apiResponse.created(created));
     }),
 );
@@ -41,10 +43,13 @@ categoiresRouter.post(
 categoiresRouter.put(
     "/categoires/:id",
     authMiddleware,
+    categoiresUtils.uploadCategoryIcon,
     catchAsync(async (req: AuthRequest, res: Response) => {
-        const id = req.params.id as string;
-        const data = validate(CategoiresSchema.update)(req.body);
-        const updated = await categoiresService.update(id as any, data as any);
+        const id = categoiresUtils.getCategoryId(req.params.id);
+        const updated = await categoiresUtils.runWithUploadedIconCleanup(req, async () => {
+            const data = categoiresUtils.getUpdateCategoryInput(req);
+            return categoiresService.update(id, data);
+        });
         res.json(apiResponse.ok(updated));
     }),
 );
@@ -53,8 +58,8 @@ categoiresRouter.delete(
     "/categoires/:id",
     authMiddleware,
     catchAsync(async (req: AuthRequest, res: Response) => {
-        const id = req.params.id as string;
-        const removed = await categoiresService.remove(id as any);
+        const id = categoiresUtils.getCategoryId(req.params.id);
+        const removed = await categoiresService.remove(id);
         res.json(apiResponse.ok(removed));
     }),
 );

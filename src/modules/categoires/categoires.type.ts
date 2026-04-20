@@ -12,7 +12,7 @@ export interface CreateCategoiresInput {
 }
 
 export interface UpdateCategoiresInput {
-  home_id: number | null;
-  name: string;
-  icon: string;
+  home_id?: number | null;
+  name?: string;
+  icon?: string;
 }
