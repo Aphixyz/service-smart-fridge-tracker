@@ -17,15 +17,18 @@ export const categoiresRepository = {
     return rows;
   },
 
-  findById: async (id: number): Promise<Categoires | null> => {
+  findById: async (
+    id: number,
+    homeId: number,
+  ): Promise<Categoires | null> => {
     const sql = `
-      SELECT  id, name, icon
+      SELECT id, home_id, name, icon
       FROM categories
       WHERE id = $1
+        AND (home_id = $2 OR home_id IS NULL)
       LIMIT 1;
     `;
-
-    const { rows } = await db.query<Categoires>(sql, [id]);
+    const { rows } = await db.query<Categoires>(sql, [id, homeId]);
     return rows[0] ?? null;
   },
 
