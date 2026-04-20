@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { appError } from "../../common/error/AppError.ts";
 
-export const CategoiresSchema = {
+export const categoriesSchema = {
   params: z.object({
     id: z.coerce.number().int().positive("Id must be a positive number"),
   }),
