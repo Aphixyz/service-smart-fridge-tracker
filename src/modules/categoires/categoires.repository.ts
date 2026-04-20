@@ -13,7 +13,7 @@ export const categoiresRepository = {
       WHERE hu."id" = $1 OR hu."id" IS NULL
       ORDER BY id ASC;
     `;
-    const { rows } = await db.query<Categoires>(sql);
+    const { rows } = await db.query<Categoires>(sql, [id]);
     return rows;
   },
 
