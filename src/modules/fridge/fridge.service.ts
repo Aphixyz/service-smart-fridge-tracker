@@ -1,29 +1,12 @@
 import { fridgeRepository } from './fridge.repository.ts';
 import { appError } from '../../common/error/AppError.ts';
+import { Product } from './fridge.type.ts';
 
-export interface Fridge {
-  id: number;
-  quantity: number;
-  category: string;
-  [key: string]: any;
-}
-
-export interface Product {
-  id: number;
-  name: string;
-  category_id: number;
-  categories_name: string;
-  quantity: number;
-  unit: string;
-  expiry_date: string;
-  status: string;
-  [key: string]: any;
-}
 const statusMap: Record<string, string> = {
-  "Active": "ปกติ",         // หรือจะใช้คำว่า "พร้อมทาน", "ใช้งานอยู่"
+  "Active": "ปกติ",
   "Expired": "หมดอายุ",
-  "Expiring": "ใกล้หมดอายุ", // ถ้ามี
-  "Consumed": "หมดแล้ว"     // ถ้ามี
+  "Expiring": "ใกล้หมดอายุ",
+  "Consumed": "หมดแล้ว"
 };
 
 export const fridgeService = {

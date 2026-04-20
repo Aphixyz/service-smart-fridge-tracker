@@ -2,21 +2,10 @@ import bcrypt from "bcryptjs";
 import { registerRepository } from "./register.repository.ts";
 import { appError } from "../../common/error/AppError.ts";
 import { throwIf } from "../../common/utils/checker.ts";
-
-export interface CreateUserRegisterInput {
-  name: string;
-  username: string;
-  password: string;
-}
-
-export interface UserRegister {
-  id: number;
-  name: string;
-  username: string;
-  password: string;
-}
+import { CreateUserRegisterInput } from "./register.type.ts";
 
 export const registerService = {
+  
   async save(data: CreateUserRegisterInput) {
     // เช็คข้อมูลเบื้องต้น
     this.validateRegisterInput(data);
