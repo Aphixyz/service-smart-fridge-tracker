@@ -7,9 +7,7 @@ import { clearAuthCookie, setAuthCookie } from '../../common/utils/authCookie.ts
 export const authRouter = Router();
 
 authRouter.post('/auth/login', catchAsync(async (req: Request, res: Response) => {
-  const { username, password } = req.body;
-  const { token, user } = await authService.login(username, password);
-
+  const { token, user } = await authService.login(req.body);
   setAuthCookie(res, token);
   res.json(apiResponse.ok({ user }, 'Login successful'));
 }));
