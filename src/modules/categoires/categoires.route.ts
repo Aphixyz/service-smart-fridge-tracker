@@ -11,8 +11,9 @@ export const categoiresRouter = Router();
 categoiresRouter.get(
     "/categoires",
     authMiddleware,
-    catchAsync(async (_req: AuthRequest, res: Response) => {
-        const data = await categoiresService.getAllCategories();
+    catchAsync(async (req: AuthRequest, res: Response) => {
+        const auth_id = req.user!.id;
+        const data = await categoiresService.getAllCategories(auth_id);
         res.json(apiResponse.ok(data));
     }),
 );
