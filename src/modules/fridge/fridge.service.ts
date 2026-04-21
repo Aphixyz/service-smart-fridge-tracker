@@ -1,6 +1,6 @@
 import { fridgeRepository } from './fridge.repository.ts';
 import { appError } from '../../common/error/AppError.ts';
-import { Product } from './fridge.type.ts';
+import { Product, RequestFridgeProduct } from './fridge.type.ts';
 
 const statusMap: Record<string, string> = {
   "Active": "ควรบริโภค",
@@ -26,14 +26,6 @@ export const fridgeService = {
     return this.mapProductList(products);
   },
 
-  // async deleteFridge(fridgeId: number) {
-  //   const fridge = await fridgeRepository.deleteFridge(fridgeId);
-  //   if (fridge.length === 0) {
-  //     throw appError.notFound('Fridge not found');
-  //   }
-  //   return fridge;
-  // },
-
   async deleteProduct(fridgeId: number, productId: number) {
     const deletedCount = await fridgeRepository.deleteProduct(fridgeId, productId);
     if (deletedCount === 0) {
@@ -49,5 +41,9 @@ export const fridgeService = {
     }));
   },
 
+  async insertProduct(fridgeId: number, product: RequestFridgeProduct) {
+    const result = await fridgeRepository.insertProduct(fridgeId, product);
+    return result;
+  },
 
 };

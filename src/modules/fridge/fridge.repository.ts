@@ -1,4 +1,5 @@
 import db from '../../common/database/db.ts';
+import { RequestFridgeProduct } from './fridge.type.ts';
 
 export const fridgeRepository = {
   findFridgeDetailByHomeId: async (homeId: number) => {
@@ -21,8 +22,8 @@ export const fridgeRepository = {
     return result.rows;
   },
 
-   FindProductsByFridgeId: async (fridgeId: number) => {
-            const sql = `SELECT 
+  FindProductsByFridgeId: async (fridgeId: number) => {
+    const sql = `SELECT 
                               pd.id, pd."name" AS products_name,
                               pd.category_id ,
                               cat.name AS categories_name, 
@@ -30,15 +31,32 @@ export const fridgeRepository = {
                         FROM products pd 
                               JOIN home_fridge hf ON pd.fridge_id = hf.id 
                               JOIN categories cat ON pd.category_id = cat.id 
-                        WHERE hf.id = $1`;
-            const res = await db.query(sql, [fridgeId]);
-            return res.rows;
-      },
+                        WHERE hf.id = $1
+                        ORDER BY pd.id ASC`;
+    const res = await db.query(sql, [fridgeId]);
+    return res.rows;
+  },
+
+  deleteProduct: async (fridgeId: number, productId: number) => {
+    const sql = `DELETE FROM products WHERE fridge_id = $1 AND id = $2`;
+    const res = await db.query(sql, [fridgeId, productId]);
+    return res.rowCount;
+  },
+
+  insertProduct: async (
+    fridgeId: number,
+    product: RequestFridgeProduct
+  ) => {
+    const sql = `
+        INSERT INTO products (fridge_id, category_id, name, expiry_date, quantity, unit, status) 
+        VALUES($1, $2, $3, $4, $5, $6, $7)
+        RETURNING *;
+    `;
     
-    deleteProduct: async (fridgeId: number, productId: number) => {
-        const sql = `DELETE FROM products WHERE fridge_id = $1 AND id = $2`;
-        const res = await db.query(sql, [fridgeId, productId]);
-        return res.rowCount;
-    }
+    const values = [fridgeId, product.body.category_id, product.body.name, product.body.expiry_date, product.body.quantity, product.body.unit, product.body.status='Active'];
+    const res = await db.query(sql, values);
+    return res.rows[0]; 
+  },
+
 };
 
