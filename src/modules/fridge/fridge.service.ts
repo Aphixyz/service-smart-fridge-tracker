@@ -26,6 +26,22 @@ export const fridgeService = {
     return this.mapProductList(products);
   },
 
+  // async deleteFridge(fridgeId: number) {
+  //   const fridge = await fridgeRepository.deleteFridge(fridgeId);
+  //   if (fridge.length === 0) {
+  //     throw appError.notFound('Fridge not found');
+  //   }
+  //   return fridge;
+  // },
+
+  async deleteProduct(fridgeId: number, productId: number) {
+    const deletedCount = await fridgeRepository.deleteProduct(fridgeId, productId);
+    if (deletedCount === 0) {
+      throw appError.notFound('ไม่พบสินค้าในตู้เย็น');
+    }
+    return { message: 'ลบสินค้าออกจากตู้เย็นเรียบร้อย' };
+  },
+
   mapProductList(products: Product[]) {
     return products.map((product) => ({
       ...product,

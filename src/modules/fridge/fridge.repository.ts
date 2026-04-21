@@ -33,5 +33,12 @@ export const fridgeRepository = {
                         WHERE hf.id = $1`;
             const res = await db.query(sql, [fridgeId]);
             return res.rows;
-      }
+      },
+    
+    deleteProduct: async (fridgeId: number, productId: number) => {
+        const sql = `DELETE FROM products WHERE fridge_id = $1 AND id = $2`;
+        const res = await db.query(sql, [fridgeId, productId]);
+        return res.rowCount;
+    }
 };
+

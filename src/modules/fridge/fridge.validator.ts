@@ -13,6 +13,11 @@ export const FridgeSchema = {
   }),
 };
 
+export const FridgeIdSchema = z.object({
+  fridgeId: z.coerce.number().int().positive('Fridge ID ต้องเป็นตัวเลขบวก'),
+});
+
+
 export const validate = (schema) => (data) => {
   const result = schema.safeParse(data);
   if (!result.success) {
