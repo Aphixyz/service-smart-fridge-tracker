@@ -1,3 +1,5 @@
+import { Request } from "express";
+
 export interface Fridge {
   id: number;
   quantity: number;
@@ -16,3 +18,17 @@ export interface Product {
   status: string;
   [key: string]: any;
 }
+interface fridgeParams {
+  fridgeId: number;
+}
+
+interface RequestProduct {
+  category_id: number;
+  name: string;
+  expiry_date: string;
+  quantity: number;
+  unit: string;
+  status: 'Active' | 'Expired' | 'Consumed';
+}
+
+export type RequestFridgeProduct = Request<fridgeParams, any, RequestProduct>
