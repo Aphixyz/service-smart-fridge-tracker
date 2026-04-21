@@ -18,3 +18,11 @@ fridgeRouter.get('/fridges/:fridgeId/products', authMiddleware, catchAsync(async
     const products = await fridgeService.findProductsByFridgeId(fridgeId);
     res.json(apiResponse.ok(products));
 }));
+
+fridgeRouter.delete('/fridges/:fridgeId/products/:productId', authMiddleware, catchAsync(async (req: AuthRequest, res: Response) => {
+    const fridgeId = parseInt(req.params.fridgeId as string);
+    const productId = parseInt(req.params.productId as string);
+    const product = await fridgeService.deleteProduct(fridgeId, productId);
+    res.json(apiResponse.ok(product));
+}));
+
