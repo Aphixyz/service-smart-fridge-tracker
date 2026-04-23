@@ -61,9 +61,8 @@ categoriesRouter.delete(
     "/categories/:id",
     authMiddleware,
     catchAsync(async (req: AuthRequest, res: Response) => {
-        const authId = req.user!.id;
         const id = categoriesUtils.getCategoryId(req.params.id);
-        const removed = await categoriesService.remove(id, authId);
+        const removed = await categoriesService.remove(id);
         res.json(apiResponse.ok(removed));
     }),
 );

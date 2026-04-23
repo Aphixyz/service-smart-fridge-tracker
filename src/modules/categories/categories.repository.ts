@@ -29,7 +29,7 @@ export const categoriesRepository = {
       LIMIT 1;
     `;
     const { rows } = await db.query<categories>(sql, [id, homeId]);
-    return rows[0] ?? null;
+    return rows[0];
   },
 
   create: async (data: CreatecategoriesInput): Promise<categories | null> => {
@@ -39,10 +39,10 @@ export const categoriesRepository = {
       RETURNING *;
     `;
 
-    const values = [data.home_id ?? null, data.name, data.icon];
+    const values = [data.home_id , data.name, data.icon];
     const { rows } = await db.query<categories>(sql, values);
 
-    return rows[0] ?? null;
+    return rows[0];
   },
 
   update: async (
@@ -56,10 +56,10 @@ export const categoriesRepository = {
       RETURNING *;
     `;
 
-    const values = [data.home_id ?? null, data.name, data.icon, id];
+    const values = [data.home_id , data.name, data.icon, id];
     const { rows } = await db.query<categories>(sql, values);
 
-    return rows[0] ?? null;
+    return rows[0];
   },
 
   remove: async (id: number): Promise<categories | null> => {
@@ -70,6 +70,6 @@ export const categoriesRepository = {
     `;
 
     const { rows } = await db.query<categories>(sql, [id]);
-    return rows[0] ?? null;
+    return rows[0];
   },
 };

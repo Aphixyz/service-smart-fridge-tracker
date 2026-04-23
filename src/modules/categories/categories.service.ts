@@ -30,7 +30,7 @@ export const categoriesService = {
     data: UpdatecategoriesInput,
   ): Promise<categories> {
     const item = await this.getCategoryById(id, homeId);
-    // ถ้าไม่มี icon ใหม่ ให้ใช้ค่าเดิมไปก่อน
+
     const nextIcon = data.icon ?? item.icon;
     const updated = await categoriesRepository.update(id, {
       name: data.name,
@@ -38,18 +38,15 @@ export const categoriesService = {
       icon: nextIcon,
     });
     if (!updated) throw appError.internal("Failed to update categories");
-    // ลบไฟล์เก่าหลังจากบันทึก path ใหม่ลงฐานข้อมูลสำเร็จแล้วเท่านั้น
+
     if (nextIcon !== item.icon) await removeProjectUpload(item.icon);
 
     return updated;
   },
 
-  async remove(id: number, homeId: number): Promise<categories> {
-    await this.getCategoryById(id, homeId);
+  async remove(id: number): Promise<categories> {
     const removed = await categoriesRepository.remove(id);
-    if (!removed) {
-      throw appError.internal("Failed to remove categories");
-    }
+    if (!removed) throw appError.notFound("ไม่พบข้อมูล");
     await removeProjectUpload(removed.icon);
     return removed;
   },
