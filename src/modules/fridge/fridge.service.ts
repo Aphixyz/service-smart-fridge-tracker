@@ -13,7 +13,7 @@ export const fridgeService = {
   async findFridgeDetailByHomeId(homeId: number) {
     const fridgeDetails = await fridgeRepository.findFridgeDetailByHomeId(homeId);
     if (fridgeDetails.length === 0) {
-      throw appError.notFound('Fridge not found');
+      return [];
     }
     return fridgeDetails;
   },
@@ -21,7 +21,7 @@ export const fridgeService = {
   async findProductsByFridgeId(fridgeId: number) {
     const products = await fridgeRepository.FindProductsByFridgeId(fridgeId);
     if (products.length === 0) {
-      throw appError.notFound('Products not found');
+      return [];
     }
     return this.mapProductList(products);
   },
