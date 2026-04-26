@@ -10,7 +10,8 @@ export const fridgeRepository = {
         hf.location,
         COUNT(p.id) AS total_items,
         SUM(COALESCE(p.quantity, 0)) AS total_quantity,
-        COUNT(DISTINCT p.category_id) AS total_categories
+        COUNT(DISTINCT p.category_id) AS total_categories,
+        COUNT(CASE WHEN p.status != 'Active' THEN 1 END) AS inactive_items_count
       FROM home_fridge hf
       LEFT JOIN products p ON hf.id = p.fridge_id
       WHERE hf.home_id = $1
