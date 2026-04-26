@@ -1,5 +1,5 @@
 import db from '../../common/database/db.ts';
-import { RequestFridgeProduct } from './fridge.type.ts';
+import { RequestFridgeProduct, FridgeBody } from './fridge.type.ts';
 
 export const fridgeRepository = {
   findFridgeDetailByHomeId: async (homeId: number) => {
@@ -58,6 +58,18 @@ export const fridgeRepository = {
     const res = await db.query(sql, values);
     return res.rows[0]; 
   },
+
+  insertFridge: async (homeId: number, fridge: FridgeBody) => {
+    const sql = `
+        INSERT INTO home_fridge (home_id, name, location) 
+        VALUES($1, $2, $3)
+        RETURNING *;
+    `;
+    
+    const values = [homeId, fridge.name, fridge.location];
+    const res = await db.query(sql, values);
+    return res.rows[0]; 
+  }
 
 };
 

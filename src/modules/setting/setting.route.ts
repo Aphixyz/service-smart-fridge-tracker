@@ -8,22 +8,22 @@ import type { AuthRequest } from "../auth/auth.type.ts";
 export const settingRouter = Router();
 
 settingRouter.get(
-    "/settings", 
-    authMiddleware,
-    catchAsync(async (req: AuthRequest, res: Response) => {
-        const userId = req.user?.id; 
-        const setting = await settingService.findSettingByUserId(Number(userId));
-        res.json(apiResponse.ok(setting));
-    }),
+  "/settings",
+  authMiddleware,
+  catchAsync(async (req: AuthRequest, res: Response) => {
+    const userId = req.user?.id;
+    const setting = await settingService.findSettingByUserId(Number(userId));
+    res.json(apiResponse.ok(setting));
+  }),
 );
 
 settingRouter.post(
-    "/settings", 
-    authMiddleware,
-    catchAsync(async (req: AuthRequest, res: Response) => {
-        const userId = req.user?.id; 
-        const data = req.body;      
-        const setting = await settingService.buildSetting(Number(userId), data);
-        res.json(apiResponse.ok(setting));
-    }),
+  "/settings",
+  authMiddleware,
+  catchAsync(async (req: AuthRequest, res: Response) => {
+    const userId = req.user?.id;
+    const data = req.body;
+    const setting = await settingService.buildSetting(Number(userId), data);
+    res.json(apiResponse.ok(setting));
+  }),
 );

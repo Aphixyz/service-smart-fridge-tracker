@@ -33,5 +33,12 @@ fridgeRouter.post('/fridges/:fridgeId/products', authMiddleware, catchAsync(asyn
     res.json(apiResponse.ok(product));
 }));
 
+fridgeRouter.post('/fridges', authMiddleware, catchAsync(async (req: AuthRequest, res: Response) => {
+    const homeId = req.user!.id;
+    const fridge = await fridgeService.insertFridge(homeId, req.body);
+    res.json(apiResponse.ok(fridge));
+}));
+
+
 
 

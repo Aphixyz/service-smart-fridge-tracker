@@ -1,6 +1,6 @@
 import { fridgeRepository } from './fridge.repository.ts';
 import { appError } from '../../common/error/AppError.ts';
-import { Product, RequestFridgeProduct } from './fridge.type.ts';
+import { Product, RequestFridgeProduct, FridgeBody } from './fridge.type.ts';
 
 const statusMap: Record<string, string> = {
   "Active": "ควรบริโภค",
@@ -43,6 +43,11 @@ export const fridgeService = {
 
   async insertProduct(fridgeId: number, product: RequestFridgeProduct) {
     const result = await fridgeRepository.insertProduct(fridgeId, product);
+    return result;
+  },
+
+  async insertFridge(homeId: number, fridge: FridgeBody) {
+    const result = await fridgeRepository.insertFridge(homeId, fridge);
     return result;
   },
 
