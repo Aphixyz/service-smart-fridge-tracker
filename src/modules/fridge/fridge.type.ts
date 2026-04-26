@@ -7,6 +7,11 @@ export interface Fridge {
   [key: string]: any;
 }
 
+export interface FridgeBody {
+  name: string;
+  location: string;
+}
+
 export interface Product {
   id: number;
   name: string;
