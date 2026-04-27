@@ -32,3 +32,9 @@ export interface LoginResult {
     token: string;
     user: AuthenticatedUser;
 }
+
+
+export interface LoginInput {
+  username: string;
+  password: string;
+}

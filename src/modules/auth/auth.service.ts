@@ -19,7 +19,6 @@ export const authService = {
       username: data.username.trim(),
       password: data.password,
     };
-
     // ค้นหาผู้ใช้
     const user = await authRepository.findOneByUsername(payload.username);
 
@@ -40,7 +39,6 @@ export const authService = {
       name: user.name,
       username: user.username,
     };
-
     return {
       token: this.signAccessToken(this.buildUserPayload(authenticatedUser)),
       user: authenticatedUser,
@@ -60,6 +58,7 @@ export const authService = {
     return {
       id: user.id,
       username: user.username,
+      name: user.name,
     };
   },
 
