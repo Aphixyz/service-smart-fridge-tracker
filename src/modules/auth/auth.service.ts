@@ -21,12 +21,19 @@ export const authService = {
     };
     // ค้นหาผู้ใช้
     const user = await authRepository.findOneByUsername(payload.username);
+
+    // ใช้ if ปกติเพื่อหยุดการทำงานและทำ Type Guard
     if (!user) {
       throw appError.unauthorized("Invalid username or password");
     }
-    // เช็ครหัสผ่าน
+
+    // ตรงนี้ TypeScript จะฉลาดพอที่จะรู้ว่า user ไม่เป็น null แน่นอน (ไม่ต้องเช็คซ้ำแล้ว)
     const isMatch = await this.comparePassword(payload.password, user.password);
-    throwIf(appError.unauthorized("Invalid username or password"))(!isMatch);
+
+    if (!isMatch) {
+      throw appError.unauthorized("Invalid username or password");
+    }
+
     const authenticatedUser: AuthenticatedUser = {
       id: user.id,
       name: user.name,
