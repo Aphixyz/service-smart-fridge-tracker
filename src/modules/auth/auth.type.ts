@@ -17,6 +17,11 @@ export interface AuthUserRecord {
     password: string;
 }
 
+export interface LoginInput {
+  username: string;
+  password: string;
+}
+
 export interface AuthenticatedUser {
     id: number;
     name: string;
