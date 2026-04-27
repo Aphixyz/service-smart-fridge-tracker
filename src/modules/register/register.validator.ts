@@ -1,24 +1,29 @@
 import { z } from "zod";
-import { appError } from "../../common/error/AppError.ts";
 
 export const RegisterSchema = {
   create: z
     .object({
-      username: z.string().email(),
+      username: z
+        .string()
+        .email("รูปแบบอีเมลไม่ถูกต้อง"),
+
       name: z
         .string()
-        .min(2, "Name must be at least 2 characters")
-        .max(20, "Name must be at most 20 characters"),
+        .min(2, "ชื่อต้องมีอย่างน้อย 2 ตัวอักษร")
+        .max(20, "ชื่อต้องไม่เกิน 20 ตัวอักษร"),
+
       password: z
         .string()
-        .min(6, "Password must be at least 6 characters")
-        .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-        .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-        .regex(/[0-9]/, "Password must contain at least one number")
-        .max(100, "Password must be at most 100 characters"),
+        .min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร")
+        .regex(/[A-Z]/, "รหัสผ่านต้องมีตัวพิมพ์ใหญ่อย่างน้อย 1 ตัว")
+        .regex(/[a-z]/, "รหัสผ่านต้องมีตัวพิมพ์เล็กอย่างน้อย 1 ตัว")
+        .regex(/[0-9]/, "รหัสผ่านต้องมีตัวเลขอย่างน้อย 1 ตัว")
+        .max(100, "รหัสผ่านต้องไม่เกิน 100 ตัวอักษร"),
+
       confirmpassword: z.string(),
     })
     .refine((data) => data.password === data.confirmpassword, {
-      message: "Passwords do not match",
+      message: "รหัสผ่านไม่ตรงกัน",
+      path: ["confirmpassword"], // 👈 สำคัญ: ชี้ error ไป field นี้
     }),
 };

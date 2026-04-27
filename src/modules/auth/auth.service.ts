@@ -12,7 +12,6 @@ import type {
 
 export const authService = {
   async login(data: LoginInput): Promise<LoginResult> {
-    // เช็คข้อมูลเบื้องต้น
     this.validateLoginInput(data);
 
     const payload = {
@@ -21,13 +20,11 @@ export const authService = {
     };
     // ค้นหาผู้ใช้
     const user = await authRepository.findOneByUsername(payload.username);
-
-    // ใช้ if ปกติเพื่อหยุดการทำงานและทำ Type Guard
+    
     if (!user) {
       throw appError.unauthorized("Invalid username or password");
     }
 
-    // ตรงนี้ TypeScript จะฉลาดพอที่จะรู้ว่า user ไม่เป็น null แน่นอน (ไม่ต้องเช็คซ้ำแล้ว)
     const isMatch = await this.comparePassword(payload.password, user.password);
 
     if (!isMatch) {

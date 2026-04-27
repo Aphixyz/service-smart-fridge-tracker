@@ -17,7 +17,7 @@ authRouter.post(
     try {
       const result = LoginSchema.login.safeParse(req.body);
       if (!result.success) {
-        throw appError.badRequest();
+        res.json(apiResponse.error('Invalid username or password'))
       }
       const { token, user } = await authService.login(req.body);
       setAuthCookie(res, token);
