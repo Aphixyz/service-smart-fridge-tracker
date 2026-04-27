@@ -1,8 +1,10 @@
-import db from '../../common/database/db.ts';
-import type { AuthUserRecord } from './auth.type.ts';
+import db from "../../common/database/db.ts";
+import type { AuthUserRecord } from "./auth.type.ts";
 
 export const authRepository = {
-  findOneByUsername: async (username: string): Promise<AuthUserRecord | null> => {
+  findOneByUsername: async (
+    username: string,
+  ): Promise<AuthUserRecord | null> => {
     const sql = `
       SELECT id, name, username, password
       FROM home_user
