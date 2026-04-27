@@ -14,18 +14,20 @@ export const authRouter = Router();
 authRouter.post(
   "/auth/login",
   catchAsync(async (req: Request, res: Response) => {
-    try {
-      const result = LoginSchema.login.safeParse(req.body);
-      if (!result.success) {
-        res.json(apiResponse.error('Invalid username or password'))
-      }
-      const { token, user } = await authService.login(req.body);
-      setAuthCookie(res, token);
-      res.json(apiResponse.ok({ user }, "Login successful"));
-    } catch (error) {
-      console.log(error);
+    const result = LoginSchema.login.safeParse(req.body);
+
+    if (!result.success) {
+      throw appError.badRequest("Invalid username or password");
     }
-  }),
+
+    const { token, user } = await authService.login(result.data);
+
+    setAuthCookie(res, token);
+
+    return res.json(
+      apiResponse.ok({ user }, "Login successful")
+    );
+  })
 );
 
 authRouter.post(

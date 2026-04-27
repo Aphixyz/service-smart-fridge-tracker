@@ -3,6 +3,7 @@ import type { JwtPayload } from 'jsonwebtoken';
 
 export interface AuthTokenPayload extends JwtPayload {
     id: number;
+    name: string;
     username: string;
 }
 
@@ -31,10 +32,4 @@ export interface AuthenticatedUser {
 export interface LoginResult {
     token: string;
     user: AuthenticatedUser;
-}
-
-
-export interface LoginInput {
-  username: string;
-  password: string;
 }

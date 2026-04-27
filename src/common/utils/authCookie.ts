@@ -57,6 +57,11 @@ const findCookieValue = (cookieHeader: string, cookieName: string): string | nul
 
 // ดึง token จาก cookie header ของ request
 export const getAuthTokenFromRequest = (req: Request): string | null => {
+  const authorizationHeader = req.headers.authorization;
+  if (authorizationHeader?.startsWith("Bearer ")) {
+    return authorizationHeader.slice("Bearer ".length).trim() || null;
+  }
+
   const cookieHeader = req.headers.cookie;
   if (!cookieHeader) return null;
 

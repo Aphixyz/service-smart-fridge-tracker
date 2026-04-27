@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z, type ZodType } from 'zod';
 import { appError } from '../../common/error/AppError.ts';
 
 export const FridgeSchema = {
@@ -26,10 +26,12 @@ export const FridgeIdSchema = z.object({
 });
 
 
-export const validate = (schema) => (data) => {
+export const validate = <T>(schema: ZodType<T>) => (data: unknown): T => {
   const result = schema.safeParse(data);
   if (!result.success) {
-    const message = result.error.errors.map(err => `${err.path}: ${err.message}`).join(', ');
+    const message = result.error.issues
+      .map((err) => `${err.path.join('.')}: ${err.message}`)
+      .join(', ');
     throw appError.badRequest(message);
   }
   return result.data;
