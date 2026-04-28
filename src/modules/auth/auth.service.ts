@@ -22,13 +22,13 @@ export const authService = {
     const user = await authRepository.findOneByUsername(payload.username);
     
     if (!user) {
-      throw appError.unauthorized("Invalid username or password");
+      throw appError.unauthorized("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
     }
 
     const isMatch = await this.comparePassword(payload.password, user.password);
 
     if (!isMatch) {
-      throw appError.unauthorized("Invalid username or password");
+      throw appError.unauthorized("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
     }
 
     const authenticatedUser: AuthenticatedUser = {
@@ -43,10 +43,10 @@ export const authService = {
   },
 
   validateLoginInput(data: LoginInput): void {
-    throwIf(appError.badRequest("username is required"))(
+    throwIf(appError.badRequest("ต้องระบุชื่อผู้ใช้"))(
       !data.username?.trim(),
     );
-    throwIf(appError.badRequest("password is required"))(
+    throwIf(appError.badRequest("จำเป็นต้องใส่รหัสผ่าน"))(
       !data.password?.trim(),
     );
   },
