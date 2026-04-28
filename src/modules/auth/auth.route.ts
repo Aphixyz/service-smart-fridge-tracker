@@ -7,24 +7,23 @@ import {
   setAuthCookie,
 } from "../../common/utils/authCookie.ts";
 import { LoginSchema } from "../../modules/auth/auth.validator.ts";
-import { appError } from "../../common/error/AppError.ts";
 
 export const authRouter = Router();
 
 authRouter.post(
   "/auth/login",
   catchAsync(async (req: Request, res: Response) => {
-    try {
-      const result = LoginSchema.login.safeParse(req.body);
-      if (!result.success) {
-        res.json(apiResponse.error('Invalid username or password'))
-      }
-      const { token, user } = await authService.login(req.body);
-      setAuthCookie(res, token);
-      res.json(apiResponse.ok({ user }, "Login successful"));
-    } catch (error) {
-      console.log(error);
+
+    const result = LoginSchema.login.safeParse(req.body);
+    if (!result.success) {
+      return res
+        .status(400)
+        .json(apiResponse.error(result.error.issues[0].message));
     }
+    const { token, user } = await authService.login(result.data);
+    setAuthCookie(res, token);
+    res.json(apiResponse.ok({ user }, "Login successful"));
+
   }),
 );
 
@@ -35,3 +34,20 @@ authRouter.post(
     res.json(apiResponse.ok(null, "Logout successful"));
   }),
 );
+
+
+authRouter.put("/auth/reset-password", catchAsync(async (_req: Request, res: Response) => {
+
+  const result = LoginSchema.resetPassword.safeParse(_req.body);
+
+  if (!result.success) {
+    return res.status(400).json({
+      message: result.error.issues[0].message,
+    });
+  }
+
+  const response = await authService.resetPassword(result.data);
+
+  res.json(apiResponse.ok(response, "Reset password successful"));
+
+}))

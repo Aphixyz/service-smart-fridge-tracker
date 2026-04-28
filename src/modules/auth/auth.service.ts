@@ -3,11 +3,14 @@ import bcrypt from "bcryptjs";
 import { appError } from "../../common/error/AppError.ts";
 import { throwIf } from "../../common/utils/checker.ts";
 import { authRepository } from "./auth.repository.ts";
+import { registerService } from "../register/register.service.ts";
 import type {
   AuthenticatedUser,
   AuthTokenPayload,
   LoginResult,
   LoginInput,
+  ResetPasswordRequest,
+  ResetPasswordResponse
 } from "./auth.type.ts";
 
 export const authService = {
@@ -20,7 +23,7 @@ export const authService = {
     };
     // ค้นหาผู้ใช้
     const user = await authRepository.findOneByUsername(payload.username);
-    
+
     if (!user) {
       throw appError.unauthorized("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
     }
@@ -72,4 +75,15 @@ export const authService = {
   ): Promise<boolean> {
     return bcrypt.compare(password, hashedPassword);
   },
+
+
+  async resetPassword(data: ResetPasswordRequest): Promise<ResetPasswordResponse> {
+    const user = await authRepository.findOneByUsername(data.username);
+    if (!user) {
+      throw appError.unauthorized("ไม่พบผู้ใช้");
+    }
+    const newPassword = await registerService.hashPassword(data.confirmPassword);
+    await authRepository.updatePassword(user.id, newPassword);
+    return { message: "รีเซ็ตรหัสผ่านสำเร็จ" };
+  }
 };

@@ -15,4 +15,16 @@ export const authRepository = {
     const { rows } = await db.query<AuthUserRecord>(sql, [username]);
     return rows[0] || null;
   },
+
+  updatePassword: async (id: number, password: string): Promise<void> => {
+    const sql = `
+      UPDATE home_user
+      SET password = $2
+      WHERE id = $1
+    `;
+    await db.query<AuthUserRecord>(sql, [id, password]);
+  },
+
+
+
 };

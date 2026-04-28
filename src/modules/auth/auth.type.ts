@@ -19,8 +19,8 @@ export interface AuthUserRecord {
 }
 
 export interface LoginInput {
-  username: string;
-  password: string;
+    username: string;
+    password: string;
 }
 
 export interface AuthenticatedUser {
@@ -32,4 +32,15 @@ export interface AuthenticatedUser {
 export interface LoginResult {
     token: string;
     user: AuthenticatedUser;
+}
+
+
+export interface ResetPasswordRequest {
+    username: string;
+    newPassword: string;
+    confirmPassword: string;
+}
+
+export interface ResetPasswordResponse {
+    message: string;
 }
