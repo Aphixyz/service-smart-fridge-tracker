@@ -17,11 +17,11 @@ authRouter.post(
     try {
       const result = LoginSchema.login.safeParse(req.body);
       if (!result.success) {
-        res.json(apiResponse.error('Invalid username or password'))
+        res.json(apiResponse.error('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'))
       }
       const { token, user } = await authService.login(req.body);
       setAuthCookie(res, token);
-      res.json(apiResponse.ok({ user }, "Login successful"));
+      res.json(apiResponse.ok({ user }, "เข้าสู่ระบบสำเร็จ"));
     } catch (error) {
       console.log(error);
     }
@@ -32,6 +32,6 @@ authRouter.post(
   "/auth/logout",
   catchAsync(async (_req: Request, res: Response) => {
     clearAuthCookie(res);
-    res.json(apiResponse.ok(null, "Logout successful"));
+    res.json(apiResponse.ok(null, "ออกจากระบบสำเร็จ"));
   }),
 );
