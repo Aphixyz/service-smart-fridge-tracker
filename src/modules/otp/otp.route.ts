@@ -13,7 +13,7 @@ otpRouter.post(
         if (!result.success) {
             return res.status(400).json(apiResponse.error(result.error.issues[0].message));
         }
-        const data = await otpService.sendOtp(result.data.email, result.data.purpose);
+        const data = await otpService.sendOtp(result.data.username, result.data.purpose);
         res.json(apiResponse.ok(data, "OTP sent to email"));
     }),
 );
@@ -25,7 +25,7 @@ otpRouter.post(
         if (!result.success) {
             return res.status(400).json(apiResponse.error(result.error.issues[0].message));
         }
-        await otpService.verifyOtp(result.data.email, result.data.otp, result.data.purpose);
-        res.json(apiResponse.ok({ email: result.data.email, purpose: result.data.purpose }, "OTP verified"));
+        await otpService.verifyOtp(result.data.username, result.data.otp, result.data.purpose);
+        res.json(apiResponse.ok({ email: result.data.username, purpose: result.data.purpose }, "OTP verified"));
     }),
 );
